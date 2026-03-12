@@ -1,0 +1,179 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Atmosphera — Weather</title>
+  <link rel="stylesheet" href="style.css" />
+  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,700;1,400&family=DM+Sans:wght@300;400;500;600&display=swap" rel="stylesheet" />
+</head>
+<body>
+
+  <!-- Animated Background -->
+  <div class="bg-layer sky-bg"></div>
+  <div class="bg-layer stars" id="stars"></div>
+  <div class="bg-layer aurora"></div>
+  <div class="bg-layer weather-overlay" id="weatherOverlay"></div>
+
+  <!-- Main App -->
+  <div class="app-container">
+
+    <!-- Header -->
+    <header class="brand">
+      <div class="brand-logo">🌐</div>
+      <h1 class="brand-name">Atmosphera</h1>
+      <p class="brand-tagline">Live Weather Intelligence</p>
+    </header>
+
+    <!-- Search -->
+    <div class="search-wrap">
+      <div class="search-box">
+        <span class="search-icon">🔍</span>
+        <input class="search-input" type="text" id="cityInput" placeholder="Search any city in the world..." autocomplete="off" />
+        <button class="search-btn" id="searchBtn">Search</button>
+      </div>
+      <!-- Suggestions dropdown -->
+      <div class="suggestions" id="suggestions"></div>
+    </div>
+
+    <!-- Unit Toggle -->
+    <div class="unit-toggle">
+      <button class="unit-btn active" id="btnCelsius" data-unit="C">°C</button>
+      <span class="unit-sep">|</span>
+      <button class="unit-btn" id="btnFahrenheit" data-unit="F">°F</button>
+    </div>
+
+    <!-- Loading -->
+    <div class="loading-wrap" id="loading">
+      <div class="spinner"></div>
+      <p class="loading-text">Fetching weather data<span class="dots">...</span></p>
+    </div>
+
+    <!-- Error -->
+    <div class="error-msg" id="errorMsg">
+      <span class="error-icon">🌫️</span>
+      <p id="errorText">City not found. Please check the spelling and try again.</p>
+    </div>
+
+    <!-- Weather Card -->
+    <div class="weather-card" id="weatherCard">
+
+      <!-- Main Panel -->
+      <div class="main-panel">
+        <div class="panel-top">
+          <div class="city-info">
+            <h2 class="city-name" id="cityName"></h2>
+            <p class="city-meta" id="cityMeta"></p>
+            <p class="local-time" id="localTime"></p>
+          </div>
+          <div class="weather-icon-wrap">
+            <div class="weather-icon-big" id="weatherIcon"></div>
+          </div>
+        </div>
+
+        <div class="temp-row">
+          <div class="temp-big" id="tempBig"></div>
+          <div class="temp-unit" id="tempUnit">°C</div>
+          <div class="feels-like-badge" id="feelsLikeBadge"></div>
+        </div>
+
+        <div class="weather-desc" id="weatherDesc"></div>
+
+        <!-- Mini stat pills -->
+        <div class="pill-row">
+          <div class="pill" id="pilHigh">⬆️ <span id="tempHigh"></span></div>
+          <div class="pill" id="pilLow">⬇️ <span id="tempLow"></span></div>
+          <div class="pill">💧 <span id="humidity"></span>%</div>
+          <div class="pill">💨 <span id="wind"></span> m/s</div>
+        </div>
+      </div>
+
+      <!-- Detail Grid -->
+      <div class="detail-grid">
+        <div class="detail-card">
+          <div class="detail-icon">🌅</div>
+          <div class="detail-label">Sunrise</div>
+          <div class="detail-val" id="sunrise"></div>
+        </div>
+        <div class="detail-card">
+          <div class="detail-icon">🌇</div>
+          <div class="detail-label">Sunset</div>
+          <div class="detail-val" id="sunset"></div>
+        </div>
+        <div class="detail-card">
+          <div class="detail-icon">🧭</div>
+          <div class="detail-label">Pressure</div>
+          <div class="detail-val" id="pressure"></div>
+        </div>
+        <div class="detail-card">
+          <div class="detail-icon">👁️</div>
+          <div class="detail-label">Visibility</div>
+          <div class="detail-val" id="visibility"></div>
+        </div>
+        <div class="detail-card">
+          <div class="detail-icon">🌬️</div>
+          <div class="detail-label">Wind Dir</div>
+          <div class="detail-val" id="windDir"></div>
+        </div>
+        <div class="detail-card">
+          <div class="detail-icon">☁️</div>
+          <div class="detail-label">Cloud Cover</div>
+          <div class="detail-val" id="cloudCover"></div>
+        </div>
+      </div>
+
+      <!-- 5-Day Forecast -->
+      <div class="forecast-section">
+        <h3 class="section-title">5-Day Forecast</h3>
+        <div class="forecast-row" id="forecastRow"></div>
+      </div>
+
+      <!-- UV & Air Quality Bar -->
+      <div class="extra-section">
+        <div class="uv-card">
+          <div class="uv-label">UV Index</div>
+          <div class="uv-bar-wrap">
+            <div class="uv-bar" id="uvBar"></div>
+          </div>
+          <div class="uv-val" id="uvVal">—</div>
+        </div>
+        <div class="humidity-card">
+          <div class="hum-label">Humidity Level</div>
+          <div class="hum-ring-wrap">
+            <svg class="hum-ring" viewBox="0 0 80 80">
+              <circle cx="40" cy="40" r="32" class="hum-track" />
+              <circle cx="40" cy="40" r="32" class="hum-fill" id="humRing" />
+            </svg>
+            <div class="hum-center" id="humCenter"></div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Recent Searches -->
+      <div class="recent-section" id="recentSection">
+        <h3 class="section-title">Recent Searches</h3>
+        <div class="recent-list" id="recentList"></div>
+      </div>
+
+      <!-- Actions -->
+      <div class="actions-row">
+        <button class="action-btn" id="locationBtn">📍 My Location</button>
+        <button class="action-btn" id="refreshBtn">🔄 Refresh</button>
+        <button class="action-btn danger" id="clearBtn">✕ Clear</button>
+      </div>
+
+    </div>
+    <!-- end weather-card -->
+
+    <!-- Geolocation prompt -->
+    <div class="geo-hint" id="geoHint">
+      <span>📍</span> Allow location access for instant local weather
+      <button class="geo-btn" id="geoBtn">Enable</button>
+    </div>
+
+  </div>
+  <!-- end app-container -->
+
+  <script src="script.js"></script>
+</body>
+</html>
