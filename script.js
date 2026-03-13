@@ -2,7 +2,7 @@
    ATMOSPHERA — WEATHER APP SCRIPT
    ======================================== */
 
-const API_KEY = 'c0a0ce870741613613d3bb2eb405f376';
+const API_KEY = 'xxxxxxxxxxxxxxxxxxxx';
 const BASE    = 'https://api.openweathermap.org';
 
 // ---- STATE ----
